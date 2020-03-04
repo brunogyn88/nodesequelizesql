@@ -6,15 +6,11 @@ module.exports = {
     async index(req, res) {
         const { user_id } = req.params;
 
-        const user = await User.findByPk(user_id);
+        const user = await User.findByPk(user_id, {
+            include: { association: 'addresses' }
+        });
 
-        if (!user) {
-            return res.status(400).json({ error: 'User not found!' });
-        }
-        
-        const addresses = await Address.findAll();
-
-        return res.json(addresses);
+        return res.json(user.addresses);
     },
 
     async store(req, res) {
